@@ -8,7 +8,7 @@
 <script>
 import TodoItem from './todo-item.vue'
 export default {
-    name:'TodosList1',
+    name:'TodosList',
     props:["todos"],
      components:{
          TodoItem,
@@ -30,9 +30,25 @@ export default {
     cursor: pointer;
 margin :0 8px;
 }
+.btn-navigate:hover{
+    padding: 12px;
+    background-color: #ffffff;
+    color:#333333;
+    border:2px solid #333333;
+    border-radius: 12px;
+    cursor: pointer;
+margin :0 8px;
+}
 .btn-navigate[disabled]{
   cursor: not-allowed;
   opacity: 0.5;
+}
+.btn-navigate[disabled]:hover{
+  cursor: not-allowed;
+  opacity: 0.5;
+   background-color: #333333;
+    color:#ffffff;
+    border:2px solid #333333;
 }
 
 select{

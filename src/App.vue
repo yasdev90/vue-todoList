@@ -3,12 +3,12 @@
     <Header @add-todo="addTodo"/>
     <div class="container">
     <div class="right">
-      <TodosInfo :todos="todosList" @show-active="showActiveTodos" @show-completed="showCompletedTodos" @show-all="showAllTodos"/>
+      <TodosInfo :showOptions="showOptions" @filter-changed="applyFilter"/>
     </div>   
     <div class="left">
-      <Paging :currentPage="pageIndex" :totalPages="filterdTodos.length/itemsPerPage" :todos="filterdTodos"  @prev-page="prevPage" @next-page="nextPage" @page-size-changed="setPageSize" />
+      <Paging :currentPage="pageIndex" :totalPages="Math.ceil(filterdTodos.length/itemsPerPage)" :todos="filterdTodos"  @prev-page="prevPage" @next-page="nextPage" @page-size-changed="setPageSize" />
     </div> 
-    <TodosList v-bind:todos="displayedTodos" />       
+    <TodosList :todos="displayedTodos" />       
     </div>
   </div>
 </template>
@@ -36,6 +36,7 @@ export default {
       pageIndex : 1,
       itemsPerPage:10,
       lastItemIndex :0,
+     showOptions:[],
     }
   },
   methods:{
@@ -65,24 +66,42 @@ export default {
      this.pageIndex = 1
      this.displayTodos()
     },
-    showActiveTodos(){
-      this.filterdTodos = this.todosList.filter(todo=> !todo.completed)
-      this.displayTodos()
-    },
-    showCompletedTodos(){
-      this.filterdTodos = this.todosList.filter(todo=> todo.completed)
-      this.displayTodos()
-    },
-    showAllTodos(){
+
+    applyFilter(filterValue){
+      if(filterValue.toUpperCase()== 'ALL'){
       this.filterdTodos = this.todosList
+      }
+      else if(filterValue.toUpperCase()== 'A'){
+      this.filterdTodos = this.todosList.filter(todo=> !todo.completed)
+      }
+       else if(filterValue.toUpperCase()== 'C'){
+     this.filterdTodos = this.todosList.filter(todo=> todo.completed)
+      }
       this.displayTodos()
     },
+    getShowOptions(){
+      return this.showOptions = [
+         {
+             text:"all",
+             value : 'all'
+         },
+         {
+             text:"active",
+             value : 'a'
+         },
+          {
+             text:"completed",
+             value :'c'
+         },
+     ]
+    }
   },
   created(){
     axios.get('https://jsonplaceholder.typicode.com/todos').then(res=>{
       this.todosList =  this.filterdTodos = res.data
       this.displayTodos()
-      })   
+      this.getShowOptions()
+      })        
   }  
 }
 </script>
@@ -100,6 +119,6 @@ body{
   float: left;
 }
 .container{
-  padding: 0 12px;
+  padding: 24px 12px;
 }
 </style>
