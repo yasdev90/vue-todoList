@@ -1,7 +1,15 @@
 <template>
   <div id="app">
     <Header @add-todo="addTodo"/>
-    <TodosList :todos="displayedTodos" :currentPage="pageIndex" :totalPages="todosList.length/itemsPerPage" @prev-page="prevPage" @next-page="nextPage" @page-size-changed="setPageSize" />
+    <div class="container">
+    <div class="right">
+      <TodosInfo :todos="todosList" @show-active="showActiveTodos" @show-completed="showCompletedTodos" @show-all="showAllTodos"/>
+    </div>   
+    <div class="left">
+      <Paging :currentPage="pageIndex" :totalPages="filterdTodos.length/itemsPerPage" :todos="filterdTodos"  @prev-page="prevPage" @next-page="nextPage" @page-size-changed="setPageSize" />
+    </div> 
+    <TodosList v-bind:todos="displayedTodos" />       
+    </div>
   </div>
 </template>
 
@@ -9,18 +17,22 @@
 import axios from 'axios'
 import Header from './components/header.vue'
 import TodosList from './components/todos-list.vue'
+import TodosInfo from './components/todos-info.vue'
+import Paging from './components/pages-navigation.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
-    TodosList
+    TodosList,
+    Paging,
+    TodosInfo,
   },
-  props:["pageSize"],
+  props:["pageSize", "todosList"],
   data(){
     return{
-      todosList:[],
       displayedTodos:[],
+      filterdTodos:[],
       pageIndex : 1,
       itemsPerPage:10,
       lastItemIndex :0,
@@ -45,18 +57,30 @@ export default {
       }
     }, 
     displayTodos: function(){
-      this.displayedTodos = this.todosList.slice(this.lastItemIndex, parseInt(this.lastItemIndex) + parseInt(this.itemsPerPage))
+      this.displayedTodos = this.filterdTodos.slice(this.lastItemIndex, parseInt(this.lastItemIndex) + parseInt(this.itemsPerPage))
     },
     setPageSize: function(pageSize){
      this.itemsPerPage = pageSize
      this.lastItemIndex = 0
      this.pageIndex = 1
      this.displayTodos()
-    }
+    },
+    showActiveTodos(){
+      this.filterdTodos = this.todosList.filter(todo=> !todo.completed)
+      this.displayTodos()
+    },
+    showCompletedTodos(){
+      this.filterdTodos = this.todosList.filter(todo=> todo.completed)
+      this.displayTodos()
+    },
+    showAllTodos(){
+      this.filterdTodos = this.todosList
+      this.displayTodos()
+    },
   },
   created(){
     axios.get('https://jsonplaceholder.typicode.com/todos').then(res=>{
-      this.todosList = res.data
+      this.todosList =  this.filterdTodos = res.data
       this.displayTodos()
       })   
   }  
@@ -69,4 +93,13 @@ body{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.right{
+  float: right;
+}
+.left{
+  float: left;
+}
+.container{
+  padding: 0 12px;
+}
 </style>

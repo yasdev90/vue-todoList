@@ -16,7 +16,6 @@ export default {
 
 <style scoped>
 .header{
-    width: 100%;
     font-size: 36px;
     color:#ffffff;
     text-align: center;
