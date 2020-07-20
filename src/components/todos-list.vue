@@ -17,7 +17,7 @@ export default {
 </script>
 <style>
 .items-container{
-    
+    text-align: left;
     padding: 50px 12px;
 }
 
