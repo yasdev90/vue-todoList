@@ -19,7 +19,7 @@ export default {
                 title: this.title,
                 complete : false,
             }
-            this.$parent.$emit('add-todo', newTodo);
+            this.$emit('add-todo', newTodo);
             this.title = '';
              this.addControlsVisible = false;
             }
@@ -38,6 +38,11 @@ export default {
 
 </script>
 <style scoped>
+form{
+    text-align: center;
+    background-color: #333333;
+    padding-bottom: 24px;
+}
     input[type="text"] {
    margin:0 12px;
     padding: 12px 20px;

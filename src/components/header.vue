@@ -1,16 +1,12 @@
 <template>
     <header class="header">
         <h1>Todo list</h1>
-        <AddTodo/>
+       
     </header>
 </template>
 <script>
-import AddTodo from './add-todo.vue'
 export default {
-    name:'Header',
-    components:{
-        AddTodo,
-    },
+    name:'Header',    
 }
 </script>
 

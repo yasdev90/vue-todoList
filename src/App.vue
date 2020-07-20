@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <Header @add-todo="addTodo"/>
+    <Header />
+    <AddTodo @add-todo="addTodo"/>
     <div class="container">
     <div class="right">
       <TodosInfo :showOptions="showOptions" @filter-changed="applyFilter"/>
@@ -19,6 +20,7 @@ import Header from './components/header.vue'
 import TodosList from './components/todos-list.vue'
 import TodosInfo from './components/todos-info.vue'
 import Paging from './components/pages-navigation.vue'
+import AddTodo from './components/add-todo'
 
 export default {
   name: 'App',
@@ -27,8 +29,9 @@ export default {
     TodosList,
     Paging,
     TodosInfo,
+    AddTodo
   },
-  props:["pageSize", "todosList"],
+  props:["pageSize"],
   data(){
     return{
       displayedTodos:[],
@@ -37,14 +40,17 @@ export default {
       itemsPerPage:10,
       lastItemIndex :0,
      showOptions:[],
+     todosListData:[]
     }
   },
   methods:{
     addTodo(newTodo){
-      this.todosList.push(newTodo)
+      this.todosListData.push(newTodo)
+      //this.filterdTodos.push(newTodo)
+      this.displayTodos()
     },
     nextPage:function (){    
-      if(this.pageIndex<this.todosList.length/this.itemsPerPage) {
+      if(this.pageIndex<this.todosListData.length/this.itemsPerPage) {
       this.pageIndex ++;
       this.lastItemIndex += parseInt(this.itemsPerPage)
       this.displayTodos()
@@ -69,14 +75,16 @@ export default {
 
     applyFilter(filterValue){
       if(filterValue.toUpperCase()== 'ALL'){
-      this.filterdTodos = this.todosList
+      this.filterdTodos = this.todosListData
       }
       else if(filterValue.toUpperCase()== 'A'){
-      this.filterdTodos = this.todosList.filter(todo=> !todo.completed)
+      this.filterdTodos = this.todosListData.filter(todo=> !todo.completed)
       }
        else if(filterValue.toUpperCase()== 'C'){
-     this.filterdTodos = this.todosList.filter(todo=> todo.completed)
+     this.filterdTodos = this.todosListData.filter(todo=> todo.completed)
       }
+     this.lastItemIndex = 0
+     this.pageIndex =1
       this.displayTodos()
     },
     getShowOptions(){
@@ -98,7 +106,7 @@ export default {
   },
   created(){
     axios.get('https://jsonplaceholder.typicode.com/todos').then(res=>{
-      this.todosList =  this.filterdTodos = res.data
+      this.todosListData =  this.filterdTodos = res.data
       this.displayTodos()
       this.getShowOptions()
       })        
