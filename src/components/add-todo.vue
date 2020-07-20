@@ -14,8 +14,7 @@ export default {
         addTodo(e){
             e.preventDefault ();
             if(this.title!=''){
-            const newTodo = {
-                id:parseInt(Math.random()*100),
+            const newTodo = {                
                 title: this.title,
                 complete : false,
             }
