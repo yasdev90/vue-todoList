@@ -19,14 +19,11 @@
 <script>
 export default {
     name:"PagesNavigation",
-    props:["todos", "currentPage", "totalPages"],
+    props:["todos", "currentPage", "totalPages", ],
     data(){
         return{
-            selectedPageSize :10
+selectedPageSize : localStorage.itemsPerPage
         }
-    },
+    }
 }
 </script>
-<style scoped>
-
-</style>

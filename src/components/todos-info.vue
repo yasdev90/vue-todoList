@@ -12,11 +12,9 @@
 export default {
     name: 'TodosInfo',
     props:["showOptions"],
-    
- created(){
-     this.filterOption = 'all'
-     console.log(this.showOptions)
- },
+    created(){             
+        this.filterOption = localStorage.filterValue.toLowerCase()      
+    }
 }
 </script>
 <style scoped>

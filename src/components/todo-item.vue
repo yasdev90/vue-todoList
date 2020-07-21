@@ -10,12 +10,21 @@
 </template>
 
 <script>
+import axios from 'axios'
+import {appConfigurations} from '../config'
 export default {
     name:'TodoItem',
   props:["todo"],
+  data(){
+      return{
+      baseApiUrl: appConfigurations.baseApiUrl,
+      }
+  },
   methods:{
-      markComplete(){
-          this.todo.completed= !this.todo.completed;
+     async markComplete(){
+          this.todo.completed = !this.todo.completed
+         await axios.put(this.baseApiUrl+'/'+this.todo.id, this.todo)
+         this.$emit('complete')
       }
   }
 }
